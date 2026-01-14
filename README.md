@@ -1,22 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Redis Queue Demo
+
+This project demonstrates a high-traffic handling architecture using Next.js, Redis Streams, RabbitMQ, and PostgreSQL.
+
+## Prerequisites
+
+- Docker and Docker Compose
+- Node.js
 
 ## Getting Started
 
-First, run the development server:
+1. **Start Infrastructure**:
+   Run the following command to start PostgreSQL, Redis, and RabbitMQ:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+   ```bash
+   docker-compose up -d
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Install Dependencies**:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   ```bash
+   npm install
+   ```
+
+3. **Setup Database**:
+   Push the schema to the database:
+
+   ```bash
+   npx prisma db push
+   ```
+
+4. **Run Development Server**:
+
+   ```bash
+   npm run dev
+   ```
+
+5. **Test the Queue**:
+   Send a POST request to the API:
+
+   ```bash
+   curl -X POST http://localhost:3000/api/queue -H "Content-Type: application/json" -d '{"message": "Hello World"}'
+   ```
+
+   This will:
+
+   - Publish a message to RabbitMQ (`demo_queue`).
+   - Add an event to Redis Stream (`demo_stream`).
+   - Log the request to PostgreSQL (`RequestLog`).
+
+## Architecture
+
+- **Next.js**: Frontend and API routes.
+- **Redis**: Used for high-speed stream ingestion.
+- **RabbitMQ**: Used for reliable message queuing.
+- **PostgreSQL**: Used for persistent storage and logs.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
