@@ -68,6 +68,20 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### ⚠️ Critical Deployment Note
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project uses **Docker Compose** for local development (RabbitMQ, Redis, Postgres). Vercel **does not** host these services. To deploy this to Vercel, you must use external cloud providers:
+
+1. **PostgreSQL**: Use [Neon](https://neon.tech) or [Supabase](https://supabase.com).
+2. **Redis**: Use [Upstash](https://upstash.com) (Redis).
+3. **RabbitMQ**: Use [CloudAMQP](https://www.cloudamqp.com).
+
+### Deployment Steps
+
+1. Push this code to GitHub (Repo: `redis-ticket-demo`).
+2. Import the project in Vercel.
+3. Add the following **Environment Variables** in Vercel settings (using your cloud provider URLs):
+   - `DATABASE_URL`
+   - `REDIS_URL`
+   - `RABBITMQ_URL`
+4. The **Worker Script** (`npm run worker`) cannot run on Vercel (it triggers a timeout). You must run the worker locally or on a VPS (like Railway/Render).
